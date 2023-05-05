@@ -6297,11 +6297,6 @@
   dependencies:
     "use-latest-callback" "^0.1.5"
 
-"react-native-upi-payment@^1.0.3":
-  "integrity" "sha512-vr3/+jKuYy618rQJg0L5yjzpxZf4+6TTPakc2szPHO3TY+KknuSeogf8583I9O8K1QGW4CzeWhVfhw4S8bFt2A=="
-  "resolved" "https://registry.npmjs.org/react-native-upi-payment/-/react-native-upi-payment-1.0.3.tgz"
-  "version" "1.0.3"
-
 "react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.72 || 1000.0.0", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.63.3", "react-native@0.71.7":
   "integrity" "sha512-Id6iRLS581fJMFGbBl1jP5uSmjExtGOvw5Gvh7694zISXjsRAsFMmU+izs0pyCLqDBoHK7y4BT7WGPGw693nYw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.71.7.tgz"
