@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from "../utils/colors";
-import { CenterHorizontal } from "../utils/GlobalStyles";
+import { CenterHorizontal, CenterVertical } from "../utils/GlobalStyles";
 
 type ScreenTitleProp = {
     children: React.ReactNode,
@@ -9,14 +9,18 @@ type ScreenTitleProp = {
     center?: boolean,
     renderBackIcon?: boolean,
     backIcon?: React.ReactNode,
+    backAction?: () => void,
+    color?: string,
 };
 
-function ScreenTitle({ children, size, center = false, renderBackIcon = false, backIcon }: ScreenTitleProp) {
+function ScreenTitle({ children, size, center = false, renderBackIcon = false, backIcon, backAction, color }: ScreenTitleProp) {
     return (
         <View style={styles.root}>
-            {renderBackIcon && backIcon}
+            <TouchableOpacity style={styles.backBtn} onPress={backAction}>
+                {renderBackIcon && backIcon}
+            </TouchableOpacity>
             <Text
-                style={[renderBackIcon && { marginLeft: 12 }, styles.title, { fontSize: size },
+                style={[renderBackIcon && { marginLeft: 12 }, styles.title, color && { color: color }, { fontSize: size },
                 center ? CenterHorizontal : {}]}
             >
                 {children}
@@ -32,11 +36,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 18,
         alignItems: 'center',
         flexDirection: 'row',
-
     },
     title: {
         fontFamily: 'Inika-Regular',
         fontSize: 20,
         color: Colors.secondary500,
+    },
+    backBtn: {
+        paddingVertical: 13,
+        marginTop: 4,
+        justifyContent: 'center',
     }
 });

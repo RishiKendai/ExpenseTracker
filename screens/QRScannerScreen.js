@@ -1,14 +1,11 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Alert, Text, View, TouchableOpacity, Linking } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-
+// import RazorpayCheckout from 'react-native-razorpay';
+import { initiateTransaction } from 'react-native-allinone-upi';
 
 // import RNUpiPayment from 'react-native-upi-gateway';
-
-// import RNUpiPayment from 'react-native-upi-payment';
-
-// import OneUpi from 'one-react-native-upi';
 
 // interface MyObject {
 //   [key: string]: any;
@@ -16,10 +13,32 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 //! Main function 
 function QRScannerScreen({ navigation }) {
 
+  // useEffect(() => {
+  //   const handleDeepLink = (event) => {
+  //     const { url } = event;
+  //     console.log('url ', url)
+  //     const successKeyword = 'success'; // Replace with the success keyword in the deep link or callback URL
+  //     const failureKeyword = 'failure'; // Replace with the failure keyword in the deep link or callback URL
+
+  //     if (url.includes(successKeyword)) {
+  //       Alert.alert('Payment Successful hure');
+  //     } else if (url.includes(failureKeyword)) {
+  //       Alert.alert('Payment Failed hure');
+  //     }
+  //   };
+
+  //   Linking.addEventListener('url', handleDeepLink);
+
+  //   return () => {
+  //     Linking.removeAllListeners('url', handleDeepLink);
+  //   };
+  // }, []);
+
 
   // const onSuccess = (e: any) => {
-  const onSuccess = (e) => {
-    // console.log(e.data)
+
+  const onSuccess = async (e) => {
+    console.log(e.data);
     const rawData = e.data.split('?')[1];
     const abstractedData = rawData.split('&');
     // const upiObject: MyObject = {}
@@ -28,34 +47,56 @@ function QRScannerScreen({ navigation }) {
       const [key, value] = item.split("=");
       upiObject[key] = value;
     }
-    console.log(upiObject);
     console.log(upiObject.pa);
-    console.log(upiObject.pn);
 
-    // RNUpiPayment.initializePayment({
-    //   vpa: upiObject.pa, // or can be john@ybl or mobileNo@upi
-    //   payeeName: upiObject.pn,
-    //   amount: '1',
-    //   transactionRef: 'aasf-332-aoei-fn'
-    // }, (su) => console.log(su),
-    //   (er) => console.log(er),
-    // );
 
-    // RNUpiPayment.initializePayment(
-    //   {
-    //     vpa: upiObject.pa, // or can be john@ybl or mobileNo@upi
-    //     payeeName: upiObject.pn,
-    //     amount: "1",
-    //     transactionRef: "aasf-332-aoei-fn",
+    // const options = {
+    //   description: 'Payment',
+    //   image: 'https://i.imgur.com/3g7nmJC.png',
+    //   currency: 'INR',
+    //   key: 'rzp_test_W0DRKPkBYY9OWX', // Replace with your Razorpay API key
+    //   amount: 100,
+    //   name: 'Payment',
+    //   notes: {
+    //     merchant_order_id: '12345', // Add any additional notes or order ID
     //   },
-    // (su: any) => console.log(su),
-    // (er: any) => console.log(er),
-    //   (su) => console.log(su),
-    //   (er) => console.log(er),
-    // );
-    // Linking.openURL(e.data).catch(err =>
-    //   console.error('An error occured', err)
-    // );
+    //   method: {
+    //     netbanking: 0,
+    //     upi: 1,
+    //     wallet: 0,
+    //   },
+    //   external: {
+    //     wallets: ['paytm'], // Include any specific wallets you want to show
+    //   },
+    //   flows: [ "qr"],
+    //   apps: ["google_pay", "phonepe"],
+    //   collect: {
+    //     vpa: upiObject.pa, // The UPI ID to collect the payment
+    //   },
+    // };
+    // RazorpayCheckout.open(options).then((data) => {
+    //   // handle success
+    //   Alert.alert(`Success: ${'done da ', data.razorpay_payment_id}`);
+    // }).catch((error) => {
+    //   // handle failure
+    //   Alert.alert(`Error da: ${error.code} | ${error.description}`);
+    //   console.log(error.description)
+    // });
+    initiateTransaction({
+      upi: 'beikeerthu5698-1@okicici',  // Required
+      transactionId: '190',  // Required
+      currency: 'INR',   // Currency Code (Required)
+      merchantCategoryCode: '1234',  // Four digit Code. (Required)
+      payeeName: 'Name of the Payee', // Required 
+      amount: '1',  // Amount must be in String and must be greater than 1.00 (Required)
+      note: 'test', // Additional Notes or description (Optional)
+    })
+      .then((res) => {
+        console.log(res, 'RESPONSE');
+      })
+      .catch((e) => {
+        console.log(e.message, 'ERROR');
+      });
   };
 
   function handleCancel() {
@@ -82,6 +123,7 @@ function QRScannerScreen({ navigation }) {
     // />
     <QRCodeScanner
       onRead={ onSuccess }
+      reactivateTimeout={100}
       // flashMode={RNCamera.Constants.FlashMode.torch}
       topContent={
         <Text style={ styles.centerText }>

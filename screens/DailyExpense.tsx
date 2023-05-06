@@ -1,9 +1,10 @@
-import { Text, SafeAreaView, StyleSheet, View, FlatList, Pressable } from 'react-native';
+import { Text, Linking, SafeAreaView, StyleSheet, View, FlatList, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import ScreenTitle from '../components/ScreenTitle';
 import SpaceMaker from "../components/SpaceMaker";
 import Btn from "../components/Btn";
 import PlusIcon from '../assets/images/plussvg.svg';
+import { initiateTransaction } from 'react-native-allinone-upi';
 
 import { BlurView } from "@react-native-community/blur";
 // import { useNavigation } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import QRScannerScreen from "./QRScannerScreen";
 import SVGIcons from '../utils/SVGIcons';
 
 import { DailyExpenseNavigationProp, DailyExpenseRouteProp } from '../App';
+import { post } from '../utils/magicBox';
 
 // import { RootStackParamList } from '../App';
 
@@ -23,9 +25,8 @@ type DailyExpenseProps = {
 
 //! Main function 
 function DailyExpense({ navigation, route }: DailyExpenseProps) {
-  const [ast, setAst] = useState<number[]>([]);
+  const [ast, setAst] = useState<Object[]>([]);
   const [askOptions, SetAskOptions] = useState(false);
-  // const navigation = useNavigation();
 
   useEffect(() => {
     const arr = [];
@@ -34,12 +35,20 @@ function DailyExpense({ navigation, route }: DailyExpenseProps) {
     }
     setAst(arr);
   }, []);
+  // useEffect(()=>{
+  //   async function fetchXpense(){
+  //     console.log('hi')
+  //     const response = await post({},'/daily-expense/')
+  //     console.log(response)
+  //   }
+  //   fetchXpense();
+  // },[])
 
   function handleAddExp() {
     SetAskOptions((prev) => !prev);
   }
   function handleAddManual() {
-    // navigation
+    navigation.navigate('AddDailyExp', {xpenseType: 'daily'})
   }
   function handleScan() {
     navigation.navigate('QRScannerScreen');
@@ -49,14 +58,14 @@ function DailyExpense({ navigation, route }: DailyExpenseProps) {
     <SafeAreaView style={styles.root}>
       <ScreenTitle size={22} >Daily Expenses</ScreenTitle>
       <View style={styles.body}>
-        <FlatList
+        {/* <FlatList
           ListFooterComponent={() => <SpaceMaker custom={{ height: 50, width: 0 }} />}
           alwaysBounceVertical={true}
           data={ast}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (<View style={styles.list}><Text style={styles.item}>{item}</Text></View>)}
           keyExtractor={(item) => item.toString()}
-        />
+        /> */}
         {/* Add Button */}
         <View style={styles.addBtn}>
           <BlurView overlayColor="transparent" style={styles.tabBarBlur} blurType="dark" blurRadius={23} blurAmount={22}>

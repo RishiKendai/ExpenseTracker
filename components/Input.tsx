@@ -12,11 +12,13 @@ type InputProp = {
     action: string,
     keyType: KeyboardTypeOptions,
     captialize?: CapitalizeOptions,
+    multiline?: boolean,
+    lines?: number,
 };
 
 
 //! Main function
-function Input({ label, onInput, data, inputType, action, keyType, captialize = 'none' }: InputProp) {
+function Input({ label, onInput, data, inputType, action, keyType, captialize = 'none', multiline = false, lines = 8 }: InputProp) {
     const [inputFocus, setInputFocus] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
@@ -35,11 +37,13 @@ function Input({ label, onInput, data, inputType, action, keyType, captialize = 
 
     }
     return (
-        <View style={[styles.InputBox, CenterHorizontal]}>
+        <View style={[styles.InputBox, CenterHorizontal, multiline ? {height: lines } : {}]}>
             <View style={[styles.Label, inputFocus && styles.LabelFocus]}>
                 <Text style={[styles.LabelContent, inputFocus && styles.LabelContentFocus]}>{label}</Text>
             </View>
             <TextInput
+                multiline={multiline}
+                numberOfLines={9}
                 autoCapitalize={captialize}
                 keyboardType={keyType}
                 secureTextEntry={inputType === 'password'}
@@ -86,6 +90,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Regular',
         fontSize: 16,
         paddingTop: 16,
+        justifyContent: 'flex-start',
         paddingHorizontal: 14,
         color: '#efefec',
     },

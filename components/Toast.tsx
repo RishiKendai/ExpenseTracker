@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { CenterHorizontal } from "../utils/GlobalStyles";
+import Colors from '../utils/colors';
 
 type ToastProp = {
     type: string,
@@ -13,11 +14,11 @@ function Toast({ type, text1 = '', text2 = '', duration }: ToastProp) {
         switch (type) {
             case 'success':
                 return {
-                    backgroundColor: '#2ECC71'
+                    backgroundColor: Colors.success
                 };
             case 'error':
                 return {
-                    backgroundColor: '#ff4c4c'
+                    backgroundColor: Colors.danger
                 };
         }
     }
