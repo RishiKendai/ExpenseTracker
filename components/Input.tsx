@@ -37,7 +37,7 @@ function Input({ label, onInput, data, inputType, action, keyType, captialize = 
 
     }
     return (
-        <View style={[styles.InputBox, CenterHorizontal, multiline ? {height: lines } : {}]}>
+        <View style={[styles.InputBox, CenterHorizontal, multiline ? { height: lines } : {}]}>
             <View style={[styles.Label, inputFocus && styles.LabelFocus]}>
                 <Text style={[styles.LabelContent, inputFocus && styles.LabelContentFocus]}>{label}</Text>
             </View>
@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
         flex: 1,
         position: 'absolute',
         paddingHorizontal: 13,
-        left: 13,
         top: 13,
     },
     LabelFocus: {
         top: -10,
+        left: 12,
     },
     LabelContent: {
         color: '#efefec',

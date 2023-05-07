@@ -5,16 +5,20 @@ import { View, Text, StyleSheet } from 'react-native';
 
 type SpinnerProp = {
     size: number,
-    msg: string,
+    msg?: string,
+    color: string
 };
 
-function Spinner({ size, msg }: SpinnerProp) {
+function Spinner({ size, msg, color }: SpinnerProp) {
     return (
         <View style={styles.Root}>
             <View style={styles.Spinner}>
-                <UIActivityIndicator size={size} color={Colors.accent500} />
+                <UIActivityIndicator size={size} color={color} />
             </View>
-            <Text style={styles.Message}>{msg}</Text>
+            {msg ?
+                <Text style={[styles.Message, { color: color }]}>{msg}</Text>
+                : null
+            }
         </View >
 
     );
@@ -29,11 +33,10 @@ const styles = StyleSheet.create({
     },
     Spinner: {
         height: 50,
-        marginBottom: 10,
     },
     Message: {
+        marginTop: 10,
         fontFamily: 'Montserrat-Black',
         fontSize: 20,
-        color: Colors.accent500,
     },
 });

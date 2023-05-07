@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, Image, ScrollView } from 'react-native';
 import BackIcon from '../../assets/images/leftArrow.svg';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -9,7 +9,7 @@ import Input from "../Input";
 import { AuthContext } from "../../store/authContext";
 import SpaceMaker from "../SpaceMaker";
 import { post } from "../../utils/magicBox";
-import { CenterHorizontal } from "../../utils/GlobalStyles";
+import { CenterHorizontal, CenterVertical } from "../../utils/GlobalStyles";
 import Colors from "../../utils/colors";
 import Btn from "../Btn";
 
@@ -121,14 +121,25 @@ function Add({ navigation, route }) {
 
     function handleBack() {
         addXpenseDispatch();
-        navigation.goBack();
+        // navigation.goBack();
+        navigation.navigate('DailyExpense', { refresh: true });
+
     }
-    function handleAdd() { }
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function handleAdd() {
+        if (isLoading) return;
+        setIsLoading(true);
+        const response = await post(addXpenseData, 'daily-expense/create', {});
+        console.log(response.data);
+        navigation.navigate('DailyExpense', { refresh: true });
+
+    }
 
     return (
         <View style={ styles.Root }>
             <ScreenTitle backAction={ handleBack } size={ 22 } renderBackIcon={ true } center={ true } backIcon={ <BackIcon /> }>Add Expense</ScreenTitle>
-            <ScrollView showsVerticalScrollIndicator={ false }>
+            <ScrollView>
                 <SpaceMaker custom={ { height: 24 } } />
                 <Input label="paid to" inputType="" keyType="default" action="paidTo" onInput={ addXpenseDispatch } data={ addXpenseData.paidAt } />
                 <SpaceMaker custom={ { height: 32 } } />
@@ -171,7 +182,7 @@ function Add({ navigation, route }) {
             </ScrollView>
             <View style={ styles.actionBtn }>
                 <Btn label='Cancel' bg={ Colors.danger } type="none" onTap={ handleBack } txtSize={ 20 } customStyle={ { flex: 1, padding: 8 } } />
-                <Btn label='Add' bg={ Colors.success } type="filled" onTap={ handleAdd } txtSize={ 20 } customStyle={ { flex: 1, padding: 8 } } />
+                <Btn label='Add' bg={ Colors.success } isLoading={ isLoading } spinnerColor={ Colors.white300 } type="filled" onTap={ handleAdd } txtSize={ 20 } customStyle={ { flex: 1, padding: 8 } } />
             </View>
         </View>
     );

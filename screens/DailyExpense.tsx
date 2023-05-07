@@ -1,13 +1,16 @@
 import { Text, Linking, SafeAreaView, StyleSheet, View, FlatList, Pressable } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import ScreenTitle from '../components/ScreenTitle';
 import SpaceMaker from "../components/SpaceMaker";
 import Btn from "../components/Btn";
 import PlusIcon from '../assets/images/plussvg.svg';
 import { initiateTransaction } from 'react-native-allinone-upi';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Xpnse from '../components/DailyExpense/Xpnse';
+import Insights from '../components/DailyExpense/Insights';
 
 import { BlurView } from "@react-native-community/blur";
-// import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Line from "../components/Line";
 import { CenterHorizontal } from "../utils/GlobalStyles";
 import QRScannerScreen from "./QRScannerScreen";
@@ -15,6 +18,9 @@ import SVGIcons from '../utils/SVGIcons';
 
 import { DailyExpenseNavigationProp, DailyExpenseRouteProp } from '../App';
 import { post } from '../utils/magicBox';
+import { AuthContext } from '../store/authContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Add from '../components/DailyExpense/Add';
 
 // import { RootStackParamList } from '../App';
 
@@ -25,61 +31,89 @@ type DailyExpenseProps = {
 
 //! Main function 
 function DailyExpense({ navigation, route }: DailyExpenseProps) {
-  const [ast, setAst] = useState<Object[]>([]);
-  const [askOptions, SetAskOptions] = useState(false);
+  const Tab = createMaterialTopTabNavigator();
 
-  useEffect(() => {
-    const arr = [];
-    for (let inc = 0; inc < 101; inc++) {
-      arr.push(inc);
+  /// USE STATA
+  const [dailyXpnse, setDailyXpnse] = useState<Object[]>([]);
+  const [askOptions, setAskOptions] = useState(false);
+  const [date, setDate] = useState(new Date().toLocaleDateString())
+
+
+  /// USE CONTEXT
+  const authCtx = useContext(AuthContext)
+
+  /// INITIAL RENDER
+  const fetchData = async () => {
+    const response = await post(
+      { uid: authCtx.token, currdate: new Date().toISOString() },
+      'daily-expense/',
+      {}
+    );
+    if (response.status === 'success') {
+      setDailyXpnse(response.data);
     }
-    setAst(arr);
-  }, []);
-  // useEffect(()=>{
-  //   async function fetchXpense(){
-  //     console.log('hi')
-  //     const response = await post({},'/daily-expense/')
-  //     console.log(response)
-  //   }
-  //   fetchXpense();
-  // },[])
+  };
+  useFocusEffect(useCallback(() => {
+    fetchData()
+  }, []))
 
-  function handleAddExp() {
-    SetAskOptions((prev) => !prev);
-  }
+
+
+  const handleAddExp = useCallback(() => {
+    setAskOptions((prev) => !prev);
+  }, []);
+
   function handleAddManual() {
-    navigation.navigate('AddDailyExp', {xpenseType: 'daily'})
+    // handleAddExp()
+    navigation.navigate('AddDailyExp', { xpenseType: 'daily' })
+    setAskOptions((prev) => !prev);
   }
   function handleScan() {
     navigation.navigate('QRScannerScreen');
   }
 
+
+  function handleSearch() {
+
+  }
+
+  const IconAndDate = () => {
+    return (
+      <View style={styles.iconAndDate}>
+        <BlurView overlayColor="transparent" style={styles.iconDateBlur} blurType="dark" blurRadius={10} blurAmount={15} />
+        <Icon name="search" size={25} color="#ececef9c" />
+        <Btn txtSize={16} label={date} bg='#ececefac' customStyle={{ ...CenterHorizontal, paddingHorizontal: 8, paddingVertical: 8, borderRadius: 50 }} type='none' onTap={handleSearch} />
+      </View>
+    );
+  }
+
+  const RenderXpnseScreen = useCallback(() => {
+    return <Xpnse dailyXpnse={dailyXpnse} />
+  }, [dailyXpnse])
+
   return (
     <SafeAreaView style={styles.root}>
       <ScreenTitle size={22} >Daily Expenses</ScreenTitle>
+      <IconAndDate />
       <View style={styles.body}>
-        {/* <FlatList
-          ListFooterComponent={() => <SpaceMaker custom={{ height: 50, width: 0 }} />}
-          alwaysBounceVertical={true}
-          data={ast}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (<View style={styles.list}><Text style={styles.item}>{item}</Text></View>)}
-          keyExtractor={(item) => item.toString()}
-        /> */}
+        <Tab.Navigator screenOptions={{ tabBarLabelStyle: { textTransform: 'capitalize', fontSize: 16, fontFamily: 'Inika-Regular' } }} initialRouteName='Xpense'>
+          <Tab.Screen options={{ tabBarLabel: 'Expense', }} name="Xpense" component={RenderXpnseScreen} />
+          <Tab.Screen name="Insights" component={Insights} />
+        </Tab.Navigator>
         {/* Add Button */}
         <View style={styles.addBtn}>
-          <BlurView overlayColor="transparent" style={styles.tabBarBlur} blurType="dark" blurRadius={23} blurAmount={22}>
-            <Btn label={<SVGIcons SvgSrc={PlusIcon} fill='#fff' />} onTap={handleAddExp} bg='#0d0d0d3c' type='filled' txtSize={18} customStyle={{ height: 50 }} />
-          </BlurView>
+          <BlurView overlayColor="transparent" style={styles.addBtnBlur} blurType="dark" blurRadius={10} blurAmount={15} />
+          <Btn label={<Icon name='add' size={28} color="#ececef9c" />} onTap={handleAddExp} bg='#ececef9c' type='none' txtSize={18} customStyle={{ height: 45 }} />
+          {/* </BlurView> */}
         </View>
         {/* Ask Option */}
         {
           askOptions
             ?
             <View style={styles.askOptions}>
-              <BlurView overlayColor="transparent" style={styles.optionsBlur} blurType="light" blurRadius={12} blurAmount={11} />
+              <BlurView overlayColor="transparent" style={styles.optionsBlur} blurType="dark" blurRadius={6} blurAmount={25} />
               <Pressable onPress={handleAddManual}><Text style={styles.optionText}>Add Manually</Text></Pressable>
-              <Line customStyle={{ ...CenterHorizontal, height: 1, width: '80%', backgroundColor: '#1616172c' }} />
+              <Line customStyle={{ ...CenterHorizontal, height: 1, width: '80%', backgroundColor: '#1616175c' }} />
               <Pressable onPress={handleScan}><Text style={styles.optionText}>Scan</Text></Pressable>
             </View>
             : ''
@@ -93,10 +127,31 @@ export default DailyExpense;
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    paddingHorizontal: 8,
   },
   body: {
     flex: 1,
     paddingHorizontal: 18,
+  },
+  iconAndDate: {
+    position: 'absolute',
+    zIndex: 3,
+    bottom: 70,
+    left: '50%',
+    marginLeft: -50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    borderRadius: 50,
+    width: 120,
+    height: 38,
+    overflow: 'hidden',
+  },
+  iconDateBlur: {
+    position: 'absolute',
+    backgroundColor: '#cececf2c',
+    height: '100%',
+    width: 120,
   },
   list: {
     backgroundColor: '#ffffff8c',
@@ -109,40 +164,40 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Inika-Regular',
   },
-  tabBarBlur: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
+  addBtnBlur: {
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: '#ececef2c',
+    height: '100%',
   },
   addBtn: {
     position: 'absolute',
     borderRadius: 50,
     overflow: 'hidden',
-    bottom: 130,
-    right: 20,
-    width: 50,
-    height: 50,
+    bottom: 70,
+    right: 25,
+    width: 45,
+    height: 45,
+  },
+  optionsBlur: {
+    position: 'absolute',
+    backgroundColor: '#ececef4c',
+    height: '100%',
+    width: '100%',
   },
   askOptions: {
     position: 'absolute',
     borderRadius: 16,
-    backgroundColor: '#ffffff7c',
-    bottom: 140,
+    bottom: 120,
     overflow: 'hidden',
-    right: 80,
+    right: 25,
   },
   optionText: {
     fontSize: 18,
-    color: '#161617',
+    // color: '#161617',
+    color: '#020202',
     fontFamily: 'Montserrat-Black',
     fontWeight: '600',
     padding: 12,
-  },
-  optionsBlur: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
   },
 });

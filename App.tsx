@@ -21,6 +21,8 @@ import Spinner from "./components/Spinner";
 import Add from "./components/DailyExpense/Add";
 import QRScannerScreen from "./screens/QRScannerScreen";
 import SVGIcons from './utils/SVGIcons';
+import Label from './components/Settings/Label';
+import AddLabel from './components/Settings/AddLabel';
 
 
 
@@ -29,10 +31,12 @@ export type RootStackParamList = {
   BottomNavigation: {};
   AddDailyExp: {};
   QRScannerScreen: undefined;
-  DailyExpense: undefined;
+  DailyExpense: any;
   Expenses: undefined;
   CollaborativeExpense: undefined;
   Settings: undefined;
+  Label: undefined;
+  AddLabel: any;
 };
 
 
@@ -51,11 +55,9 @@ export type CollaborativeExpenseRouteProp = RouteProp<RootStackParamList, 'Colla
 export type SettingsRouteProp = RouteProp<RootStackParamList, 'Settings'>;
 export type QRScannerRouteProp = RouteProp<RootStackParamList, 'QRScannerScreen'>;
 
-
-export type DailyExpenseProps = {
-  navigation: DailyExpenseNavigationProp;
-  route: DailyExpenseRouteProp;
-};
+// Label type
+export type LabelNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Label'>;
+export type LabelRouteProp = RouteProp<RootStackParamList, 'Label'>;
 
 export type ExpensesProps = {
   navigation: ExpensesNavigationProp;
@@ -168,6 +170,8 @@ function AuthenticatedStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="BottomNavigation" component={BottomNavigation} />
       <Stack.Screen name="AddDailyExp" component={Add} />
+      <Stack.Screen name="Label" component={Label} />
+      <Stack.Screen name="AddLabel" component={AddLabel} />
       <Stack.Screen name="QRScannerScreen" component={QRScannerScreen} />
     </Stack.Navigator>
   );
@@ -200,7 +204,7 @@ function Root() {
   }, []);
   if (isTryingLogin) {
     return (
-      <Spinner size={50} msg='Loading Content...' />
+      <Spinner size={50} color={Colors.accent500} msg='Loading Content...' />
     );
   }
   return <Navigation />;
