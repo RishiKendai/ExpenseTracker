@@ -50,7 +50,7 @@ function Btn({ label, type, onTap, bg, customStyle, txtSize, isLoading = false }
     }
 
     return (
-        <Pressable style={[{ ...customStyle }, { ...getOuterType(type) }, styles.Button]} onPress={onTap}>
+        <Pressable style={[styles.Button, { ...customStyle }, { ...getOuterType(type) }]} onPress={onTap}>
             <View style={[CenterHorizontal, CenterVertical]}>
                 {
                     isLoading

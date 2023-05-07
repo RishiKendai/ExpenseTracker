@@ -67,10 +67,10 @@ function Login() {
 
     async function handleLogin() {
 
-        const data = await post(loginData, 'user/auth/login');
+        const data = await post(loginData, 'user/auth/login', {});
         console.log('data', data)
         if (data?.status) {
-            authCtx.authenticate('data.token')
+            authCtx.authenticate(data.token)
         } else {
             setShowToast({ render: true, customProp: { type: 'error', text1: data.msg } });
             setTimeout(() => {
@@ -92,35 +92,35 @@ function Login() {
 
     }
     return (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+        // <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={styles.Root}>
             {
                 showToast.render ?
                     <Toast {...showToast.customProp} />
                     : ''
             }
-            <View style={styles.Root}>
-                <Image style={[styles.Logo, CenterHorizontal]} source={require('../assets/images/Logo.png')} />
-                <ScreenTitle center={true} size={38}>Expense Tracker</ScreenTitle>
-                <SpaceMaker custom={{ height: 10, width: 0 }} />
-                <Input keyType='email-address' onInput={loginDispatch} data={loginData.email} label='email' action='setEmail' />
-                <SpaceMaker custom={{ height: 1, width: '100%' }} />
-                <Input keyType='default' onInput={loginDispatch} inputType='password' data={loginData.password} label='password' action='setPassword' />
-                <SpaceMaker custom={{ height: 10, width: '100%' }} />
-                <Btn bg={Colors.accent700} txtSize={22} customStyle={{ width: '90%', height: 50, ...CenterHorizontal }} isLoading={false} label='Login' type='filled' onTap={handleLogin} />
-                <SpaceMaker custom={{ height: 18, width: '100%' }} />
-                <View style={[styles.Divider, CenterHorizontal]}>
-                    <View style={styles.Line} />
-                    <Text style={styles.DividerText}>OR</Text>
-                    <View style={styles.Line} />
-                </View>
-                <SpaceMaker custom={{ height: 12, width: '100%' }} />
-                <View style={[styles.SignupWrapper, CenterHorizontal]}>
-                    <Text style={styles.SignupText}>Don't have an account?</Text>
-                    <Btn label='Sign up' bg={Colors.secondary500} type='none' txtSize={18} customStyle={{ width: 70, height: 'auto' }} onTap={handleSignup} />
-                </View>
-                <Btn label='Forgot Password' bg={Colors.secondary350} type='none' txtSize={18} customStyle={{ width: '90%', height: 'auto', ...CenterHorizontal }} onTap={handleForgotPassword} />
+            <Image style={[styles.Logo, CenterHorizontal]} source={require('../assets/images/Logo.png')} />
+            <ScreenTitle center={true} size={38}>Expense Tracker</ScreenTitle>
+            <SpaceMaker custom={{ height: 10, width: 0 }} />
+            <Input keyType='email-address' onInput={loginDispatch} data={loginData.email} label='email' action='setEmail' />
+            <SpaceMaker custom={{ height: 1, width: '100%' }} />
+            <Input keyType='default' onInput={loginDispatch} inputType='password' data={loginData.password} label='password' action='setPassword' />
+            <SpaceMaker custom={{ height: 10, width: '100%' }} />
+            <Btn bg={Colors.accent700} txtSize={22} customStyle={{ width: '90%', height: 50, ...CenterHorizontal }} isLoading={false} label='Login' type='filled' onTap={handleLogin} />
+            <SpaceMaker custom={{ height: 18, width: '100%' }} />
+            <View style={[styles.Divider, CenterHorizontal]}>
+                <View style={styles.Line} />
+                <Text style={styles.DividerText}>OR</Text>
+                <View style={styles.Line} />
             </View>
-        </ScrollView>
+            <SpaceMaker custom={{ height: 12, width: '100%' }} />
+            <View style={[styles.SignupWrapper, CenterHorizontal]}>
+                <Text style={styles.SignupText}>Don't have an account?</Text>
+                <Btn label='Sign up' bg={Colors.secondary500} type='none' txtSize={18} customStyle={{ width: 70, height: 'auto' }} onTap={handleSignup} />
+            </View>
+            <Btn label='Forgot Password' bg={Colors.secondary350} type='none' txtSize={18} customStyle={{ width: '90%', height: 'auto', ...CenterHorizontal }} onTap={handleForgotPassword} />
+        </View>
+        // </ScrollView>
     );
 }
 export default Login;

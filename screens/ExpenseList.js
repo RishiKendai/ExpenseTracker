@@ -5,7 +5,7 @@ import ScreenTitle from '../components/ScreenTitle';
 function DailyExpense() {
   return (
     <SafeAreaView style={ styles.root }>
-      <ScreenTitle>Expense List</ScreenTitle>
+      <ScreenTitle size={22}>Expense List</ScreenTitle>
       <View style={styles.body}></View>
     </SafeAreaView>
   );
