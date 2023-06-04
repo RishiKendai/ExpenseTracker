@@ -6,7 +6,8 @@ import Colors from '../utils/colors';
 type BtnProp = {
     label: React.ReactNode | string,
     type: string,
-    onTap: (event: GestureResponderEvent) => void,
+    // onTap: (event: GestureResponderEvent) => void,
+    onTap: () => void,
     bg: string,
     // customStyle: ViewStyle,
     customStyle: any,

@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     title: {
-        fontFamily: 'Inika-Regular',
+        fontFamily: 'Inika-Bold',
         fontSize: 20,
         color: Colors.secondary500,
     },

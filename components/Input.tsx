@@ -59,22 +59,20 @@ export default Input;
 
 const styles = StyleSheet.create({
     InputBox: {
-        height: 55,
+        height: 65,
         width: '90%',
         borderColor: '#767676',
         borderWidth: 1,
         borderRadius: 6,
     },
     Label: {
-        backgroundColor: Colors.primary500,
         flex: 1,
         position: 'absolute',
         paddingHorizontal: 13,
-        top: 13,
+        top: 16,
     },
     LabelFocus: {
-        top: -10,
-        left: 12,
+        top: 2,
     },
     LabelContent: {
         color: '#efefec',
@@ -83,13 +81,14 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
     },
     LabelContentFocus: {
-        fontSize: 14,
+        fontSize: 13,
+        color: Colors.accent500,
     },
     Input: {
         flex: 1,
         fontFamily: 'Poppins-Regular',
         fontSize: 16,
-        paddingTop: 16,
+        paddingTop: 30,
         justifyContent: 'flex-start',
         paddingHorizontal: 14,
         color: '#efefec',

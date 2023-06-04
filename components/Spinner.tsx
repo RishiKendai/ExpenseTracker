@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     Root: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     Spinner: {
         height: 50,
