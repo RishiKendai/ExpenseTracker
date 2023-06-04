@@ -1,19 +1,23 @@
 import { View, Pressable, Text, StyleSheet, GestureResponderEvent } from 'react-native';
 import Spinner from "./Spinner";
 import { CenterHorizontal, CenterVertical } from '../utils/GlobalStyles';
+import Colors from '../utils/colors';
 
 type BtnProp = {
     label: React.ReactNode | string,
     type: string,
-    onTap: (event: GestureResponderEvent) => void,
+    // onTap: (event: GestureResponderEvent) => void,
+    onTap: () => void,
     bg: string,
     // customStyle: ViewStyle,
     customStyle: any,
     isLoading?: boolean,
     txtSize: number,
+    spinnerColor?: string,
+    centerHorizontal?: any,
 };
 
-function Btn({ label, type, onTap, bg, customStyle, txtSize, isLoading = false }: BtnProp) {
+function Btn({ label, type, onTap, bg, customStyle, centerHorizontal = true, txtSize, isLoading = false, spinnerColor, }: BtnProp) {
 
     function getOuterType(btnType: string) {
         switch (btnType) {
@@ -51,10 +55,10 @@ function Btn({ label, type, onTap, bg, customStyle, txtSize, isLoading = false }
 
     return (
         <Pressable style={[styles.Button, { ...customStyle }, { ...getOuterType(type) }]} onPress={onTap}>
-            <View style={[CenterHorizontal, CenterVertical]}>
+            <View style={[centerHorizontal && CenterHorizontal, CenterVertical]}>
                 {
                     isLoading
-                        ? <Spinner size={10} msg='' />
+                        ? <Spinner color={spinnerColor ? spinnerColor : Colors.accent500} size={30} msg={undefined} />
                         : <Text style={[styles.Label, { fontSize: txtSize }, { ...getTextType(type) }]}>{label}</Text>
                 }
             </View>
@@ -65,8 +69,6 @@ export default Btn;
 
 const styles = StyleSheet.create({
     Button: {
-        // paddingHorizontal: 13,
-        // height: 50,
         borderRadius: 6,
     },
     Label: {

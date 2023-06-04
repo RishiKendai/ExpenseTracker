@@ -15,25 +15,25 @@ import { LabelNavigationProp, LabelRouteProp } from '../../App';
 import { useFocusEffect } from '@react-navigation/native';
 
 
-type LabelProp = {
+type LabelScreenProp = {
     navigation: LabelNavigationProp;
     route: LabelRouteProp;
 }
 
-type Color = {
+export type ColorProp = {
     hue: number,
     saturation: number,
     lightness: number,
 }
-type Label = {
+export type LabelProp = {
     _id: string;
     access: string;
-    color: Color;
+    color: ColorProp;
     name: string;
 };
 
 //! Main 
-const Label = ({ navigation, route }: LabelProp) => {
+const Label = ({ navigation, route }: LabelScreenProp) => {
     // const navigation = useNavigation();
     const authCtx = useContext(AuthContext);
     const [labels, setLabels] = useState([])
@@ -69,7 +69,7 @@ const Label = ({ navigation, route }: LabelProp) => {
         navigation.navigate('AddLabel');
     }
 
-    function renderItem({ item }: { item: Label }) {
+    function renderItem({ item }: { item: LabelProp }) {
         const isCustom = item.access !== 'ANY'
         return (
             <View style={[styles.row, styles.item]}>
@@ -79,12 +79,9 @@ const Label = ({ navigation, route }: LabelProp) => {
                     </View>
                 </View>
                 <View style={styles.flex4}>
-                    <Text style={[styles.centerTxt, { textTransform: 'uppercase', fontFamily: 'Poppins-Regular', fontWeight: '700' }]}>{isCustom ? 'custom' : item.access}</Text>
+                    <Text style={[styles.centerTxt, { textTransform: 'uppercase', fontFamily: 'Poppins-Regular', fontWeight: '700' }]}>{isCustom ? 'custom' : 'all'}</Text>
                 </View>
-                <View style={styles.flex5}>
-                    <Text style={[styles.centerTxt, { fontFamily: 'Poppins-Regular', fontSize: 15 }]}>{`hsl(${item.color.hue}, ${item.color.saturation}, ${item.color.lightness})`}</Text>
-                </View>
-                <Pressable style={styles.flex2} onPress={() => { }}><Icon style={styles.centerTxt} name='filter-list' size={28} /></Pressable>
+                <Pressable style={styles.flex2} onPress={() => { }}><Icon style={styles.centerTxt} name='menu' size={28} /></Pressable>
             </View>
         );
 
@@ -96,7 +93,6 @@ const Label = ({ navigation, route }: LabelProp) => {
             <View style={styles.row}>
                 <View style={styles.flex6}><Text style={[styles.centerTxt, styles.heading]}>Name</Text></View>
                 <View style={styles.flex4}><Text style={[styles.centerTxt, styles.heading]}>Type</Text></View>
-                <View style={styles.flex5}><Text style={[styles.centerTxt, styles.heading]}>Color</Text></View>
                 <View style={styles.flex2}><Text style={[styles.centerTxt, styles.heading]}>Menu</Text></View>
             </View>
             <SpaceMaker custom={{ height: 24 }} />

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { View, Image, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import Colors from './utils/colors';
 import { BottomTabNavigationProp, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
@@ -21,22 +21,61 @@ import Spinner from "./components/Spinner";
 import Add from "./components/DailyExpense/Add";
 import QRScannerScreen from "./screens/QRScannerScreen";
 import SVGIcons from './utils/SVGIcons';
+import Label from './components/Settings/Label';
+import AddLabel from './components/Settings/AddLabel';
+import PreviewXpnse from './components/PreviewXpnse';
+import AddList from './components/XpnseList/AddList';
+import { LabelProp, ColorProp } from './components/Settings/Label';
+import Xpnse from './components/XpnseList/Xpnse';
+import AddXpnse from './components/XpnseList/AddXpnse';
 
+export type ProofProp = {
+  fileName: string;
+  fileSize: number;
+  height: number;
+  type: string;
+  uri: string;
+  width: number;
 
+}
+type ItemProp = {
+  _id: string;
+  amount: number;
+  label: LabelProp;
+  note: string;
+  paidAt: string;
+  payeeName: string;
+  proof: ProofProp;
+  uid?: string;
+}
+
+type PreviewItemProp = {
+  item: ItemProp;
+}
+type XpnseProp = {
+  xpnseId: string;
+  name: string;
+}
 
 export type RootStackParamList = {
   Login: {};
   BottomNavigation: {};
   AddDailyExp: {};
   QRScannerScreen: undefined;
-  DailyExpense: undefined;
+  DailyExpense: any;
   Expenses: undefined;
   CollaborativeExpense: undefined;
   Settings: undefined;
+  Label: undefined;
+  AddLabel: any;
+  PreviewXpnse: PreviewItemProp;
+  AddList: undefined;
+  Xpnse: { id: string, name: string };
+  AddXpnse: { id: string, name: string };
 };
 
 
-// Define the NAVIGATION prop type for each screen in the navigator
+/// Define the NAVIGATION prop type for each screen in the navigator
 export type DailyExpenseNavigationProp = BottomTabNavigationProp<RootStackParamList, 'DailyExpense'>;
 export type ExpensesNavigationProp = BottomTabNavigationProp<RootStackParamList, 'Expenses'>;
 export type CollaborativeExpenseNavigationProp = BottomTabNavigationProp<RootStackParamList, 'CollaborativeExpense'>;
@@ -44,7 +83,7 @@ export type SettingsNavigationProp = BottomTabNavigationProp<RootStackParamList,
 export type QRScannerNavigationProp = BottomTabNavigationProp<RootStackParamList, 'QRScannerScreen'>;
 
 
-// Define the ROUTE prop type for each screen in the navigator
+/// Define the ROUTE prop type for each screen in the navigator
 export type DailyExpenseRouteProp = RouteProp<RootStackParamList, 'DailyExpense'>;
 export type ExpensesRouteProp = RouteProp<RootStackParamList, 'Expenses'>;
 export type CollaborativeExpenseRouteProp = RouteProp<RootStackParamList, 'CollaborativeExpense'>;
@@ -52,10 +91,17 @@ export type SettingsRouteProp = RouteProp<RootStackParamList, 'Settings'>;
 export type QRScannerRouteProp = RouteProp<RootStackParamList, 'QRScannerScreen'>;
 
 
-export type DailyExpenseProps = {
-  navigation: DailyExpenseNavigationProp;
-  route: DailyExpenseRouteProp;
-};
+// PreviewXpnse type
+export type PreviewXpnseScreenRouteProp = RouteProp<RootStackParamList, 'PreviewXpnse'>;
+export type PreviewXpnseScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PreviewXpnse'>;
+
+// Xpnse type
+export type XpnseScreenRouteProp = RouteProp<RootStackParamList, 'Xpnse'>;
+export type XpnseScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Xpnse'>;
+
+// Label type
+export type LabelNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Label'>;
+export type LabelRouteProp = RouteProp<RootStackParamList, 'Label'>;
 
 export type ExpensesProps = {
   navigation: ExpensesNavigationProp;
@@ -92,7 +138,7 @@ const MyTheme = {
 };
 
 const TabBarBackground = () => (
-  <BlurView overlayColor="transparent" style={styles.tabBarBlur} blurType="dark" blurRadius={13} blurAmount={15} />
+  <BlurView overlayColor="transparent" style={styles.tabBarBlur} blurType="dark" blurRadius={6} blurAmount={5} />
 );
 
 interface TabBarIconProps {
@@ -103,53 +149,53 @@ interface TabBarIconProps {
 
 
 
-// Bottom Navigation
+//>> Bottom Navigation
 function BottomNavigation() {
   return (
-    <BottomTabs.Navigator screenOptions={{
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarStyle: { position: 'absolute', height: 60, padding: 9 },
-      tabBarBackground: TabBarBackground,
-      tabBarInactiveTintColor: '#8F8E8F',
-    }}>
-      <BottomTabs.Screen
-        name="DailyExpense"
-        component={DailyExpense}
-        options={{
-          title: 'Daily Expense',
-          tabBarLabel: 'Daily Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ArrowSwitchSvg} fill={color} />
-        }}
-      />
-      <BottomTabs.Screen
-        name="Expenses"
-        component={ExpenseList}
-        options={{
-          title: 'Expense',
-          tabBarLabel: 'Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={WalletSvg} fill={color} />
-        }}
-      />
-      <BottomTabs.Screen
-        name="CollaborativeExpense"
-        component={CollaborativeExpense}
-        options={{
-          title: 'Collaborative Expense',
-          tabBarLabel: 'Collaborative Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={FileShareSvg} fill={color} />,
-        }}
-      />
-      <BottomTabs.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          title: 'Settings',
-          tabBarLabel: 'Settings',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ProfileSvg} fill={color} />
-        }}
-      />
-    </BottomTabs.Navigator>
+        <BottomTabs.Navigator screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: { position: 'absolute', height: 60 },
+          tabBarBackground: TabBarBackground,
+          tabBarInactiveTintColor: '#8F8E8F',
+        }}>
+          <BottomTabs.Screen
+            name="DailyExpense"
+            component={DailyExpense}
+            options={{
+              title: 'Daily Expense',
+              tabBarLabel: 'Daily Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ArrowSwitchSvg} fill={color} />
+            }}
+          />
+          <BottomTabs.Screen
+            name="Expenses"
+            component={ExpenseList}
+            options={{
+              title: 'Expense',
+              tabBarLabel: 'Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={WalletSvg} fill={color} />
+            }}
+          />
+          <BottomTabs.Screen
+            name="CollaborativeExpense"
+            component={CollaborativeExpense}
+            options={{
+              title: 'Collaborative Expense',
+              tabBarLabel: 'Collaborative Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={FileShareSvg} fill={color} />,
+            }}
+          />
+          <BottomTabs.Screen
+            name="Settings"
+            component={Settings}
+            options={{
+              title: 'Settings',
+              tabBarLabel: 'Settings',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ProfileSvg} fill={color} />
+            }}
+          />
+        </BottomTabs.Navigator>
   );
 }
 
@@ -162,13 +208,18 @@ function AuthStack() {
   );
 }
 
-
+//>> SCREENS
 function AuthenticatedStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="BottomNavigation" component={BottomNavigation} />
       <Stack.Screen name="AddDailyExp" component={Add} />
+      <Stack.Screen name="Label" component={Label} />
+      <Stack.Screen name="AddLabel" component={AddLabel} />
+      <Stack.Screen name='PreviewXpnse' component={PreviewXpnse} />
       <Stack.Screen name="QRScannerScreen" component={QRScannerScreen} />
+      <Stack.Screen name="Xpnse" component={Xpnse} />
+      <Stack.Screen name="AddXpnse" component={AddXpnse} />
     </Stack.Navigator>
   );
 }
@@ -200,7 +251,7 @@ function Root() {
   }, []);
   if (isTryingLogin) {
     return (
-      <Spinner size={50} msg='Loading Content...' />
+      <Spinner size={50} color={Colors.accent500} msg='Loading Content...' />
     );
   }
   return <Navigation />;
@@ -226,8 +277,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary500,
   },
   tabBarBlur: {
-    backgroundColor: '#0d0d0d3c',
+    // backgroundColor: '#0d0d0d3c',
     height: 50,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+    backgroundColor: '#1616171c',
+    paddingHorizontal: 18,
     paddingVertical: 52,
     width: '100%',
   },

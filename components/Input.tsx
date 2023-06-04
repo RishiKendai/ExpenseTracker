@@ -37,7 +37,7 @@ function Input({ label, onInput, data, inputType, action, keyType, captialize = 
 
     }
     return (
-        <View style={[styles.InputBox, CenterHorizontal, multiline ? {height: lines } : {}]}>
+        <View style={[styles.InputBox, CenterHorizontal, multiline ? { height: lines } : {}]}>
             <View style={[styles.Label, inputFocus && styles.LabelFocus]}>
                 <Text style={[styles.LabelContent, inputFocus && styles.LabelContentFocus]}>{label}</Text>
             </View>
@@ -59,22 +59,20 @@ export default Input;
 
 const styles = StyleSheet.create({
     InputBox: {
-        height: 55,
+        height: 65,
         width: '90%',
         borderColor: '#767676',
         borderWidth: 1,
         borderRadius: 6,
     },
     Label: {
-        backgroundColor: Colors.primary500,
         flex: 1,
         position: 'absolute',
         paddingHorizontal: 13,
-        left: 13,
-        top: 13,
+        top: 16,
     },
     LabelFocus: {
-        top: -10,
+        top: 2,
     },
     LabelContent: {
         color: '#efefec',
@@ -83,13 +81,14 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
     },
     LabelContentFocus: {
-        fontSize: 14,
+        fontSize: 13,
+        color: Colors.accent500,
     },
     Input: {
         flex: 1,
         fontFamily: 'Poppins-Regular',
         fontSize: 16,
-        paddingTop: 16,
+        paddingTop: 30,
         justifyContent: 'flex-start',
         paddingHorizontal: 14,
         color: '#efefec',

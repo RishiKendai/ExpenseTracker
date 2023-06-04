@@ -7,6 +7,7 @@ const Colors = {
   accent700: '#11A9CA8c',
   accent800: '#006880',
   white300: '#EEF1F8',
+  white500: '#ffffff',
   success: '#2ECC71',
   danger: '#ff4c4c',
   warning: '#FFE207',

@@ -13,13 +13,13 @@ import { CenterHorizontal, CenterVertical } from "../../utils/GlobalStyles";
 import Colors from "../../utils/colors";
 import Btn from "../Btn";
 
-
 const addXpenseState = {
     uid: '',
     paidTo: '',
     amount: '',
     note: '',
     label: {},
+    expenseType: true,
     proof: null,
 };
 
@@ -43,17 +43,15 @@ function addXpenseReducer(state, action) {
     }
 }
 
-
 //! Main 
-function Add({ navigation, route }) {
-    const { xpenseType } = route.params;
-    // const navigation = useNavigation();
+function AddXpnse({ navigation, route }) {
+    const { id, name } = route.params;
     const authCtx = useContext(AuthContext);
 
     const [addXpenseData, addXpenseDispatch] = useReducer(addXpenseReducer, addXpenseState);
     const [labels, setLabels] = useState([]);
     useEffect(() => {
-        addXpenseDispatch({ type: 'uid', payload: authCtx.token });
+        addXpenseDispatch({ type: 'uid', payload: id });
     }, []);
 
     useEffect(() => {
@@ -122,10 +120,7 @@ function Add({ navigation, route }) {
 
     function handleBack() {
         addXpenseDispatch();
-        if (xpenseType === 'daily')
-            navigation.navigate('DailyExpense', { refresh: true });
-        if (xpenseType === 'target')
-            navigation.navigate('Xpnse', { refresh: true });
+        navigation.navigate('Xpnse', { id: id, name: name, refresh: true });
 
     }
     const [isLoading, setIsLoading] = useState(false);
@@ -133,18 +128,16 @@ function Add({ navigation, route }) {
     async function handleAdd() {
         if (isLoading) return;
         setIsLoading(true);
-        if (xpenseType === 'daily')
-            await post(addXpenseData, 'daily-expense/create', {});
-        if (xpenseType === 'target')
-            await post(addXpenseData, 'daily-expense/create', {});
-
-        navigation.navigate('DailyExpense', { refresh: true });
+        console.log(addXpenseData);
+        const response = await post(addXpenseData, 'expense/create', {});
+        console.log('AddXpnse ', response.data);
+        navigation.navigate('Xpnse', { id: id, name: name, refresh: true });
 
     }
 
     return (
         <View style={ styles.Root }>
-            <ScreenTitle backAction={ handleBack } size={ 22 } renderBackIcon={ true } center={ true } backIcon={ <BackIcon /> }>Add Expense</ScreenTitle>
+            <ScreenTitle backAction={ handleBack } size={ 22 } renderBackIcon={ true } center={ true } backIcon={ <BackIcon /> }>Add Target Expense</ScreenTitle>
             <ScrollView>
                 <SpaceMaker custom={ { height: 24 } } />
                 <Input label="paid to" inputType="" keyType="default" action="paidTo" onInput={ addXpenseDispatch } data={ addXpenseData.paidAt } />
@@ -180,8 +173,8 @@ function Add({ navigation, route }) {
                 { addXpenseData.proof !== null ? <Image style={ styles.previewImage } source={ { uri: addXpenseData.proof.uri } } /> : '' }
                 { addXpenseData.proof !== null ? <SpaceMaker custom={ { height: 32 } } /> : '' }
                 <View style={ styles.imagePickerBtn }>
-                    <Btn label="Select Image" bg={ Colors.accent500 } type="filled" onTap={ selectImage } customStyle={ { flex: 1, borderRadius: 1, paddingVertical: 12, } } />
-                    <Btn label="Capture Image" bg={ Colors.accent800 } type="filled" onTap={ captureImage } customStyle={ { flex: 1, borderRadius: 1, paddingVertical: 12, } } />
+                    <Btn label="Select Image" bg={ Colors.accent500 } type="filled" onTap={ selectImage } customStyle={ { flex: 1, borderRadius: 1, paddingVertical: 12, borderTopLeftRadius: 10, borderBottomLeftRadius: 10 } } />
+                    <Btn label="Capture Image" bg={ Colors.accent800 } type="filled" onTap={ captureImage } customStyle={ { flex: 1, borderRadius: 1, paddingVertical: 12, borderTopRightRadius: 10, borderBottomRightRadius: 10 } } />
                 </View>
                 <SpaceMaker custom={ { height: 32 } } />
 
@@ -194,7 +187,7 @@ function Add({ navigation, route }) {
     );
 };
 
-export default Add;
+export default AddXpnse;
 
 const styles = StyleSheet.create({
     Root: {
