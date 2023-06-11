@@ -31,39 +31,41 @@ function ExpenseList() {
   const [renderAddList, setRenderAddList] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItemId, setSelectedItemId] = useState(null);
-
+  const [isAdded, setIsAdded] = useState(false);
 
   /// Initial Render
   async function fetchXpnseList() {
     const id = authCtx.token;
     const response = await post({}, `expense-list/${id}`, {});
     if (response.status === 'success') {
-      console.log(response);
       setIsLoading(false);
       setXpnseList(response.data);
     }
   }
-
-
   useFocusEffect(useCallback(() => {
     fetchXpnseList();
     setRenderAddList(false);
   }, []));
-
-
   /// FUNCTIONS
   function handleAddXpnseList() {
     // naviagtion.navigate('AddList');
     setRenderAddList(prev => !prev);
   }
-
-
   async function toggleStar(item) {
-    const updatedXpnseList = xpnseList.map(list => {
+    await post({ star: !item.isStarred }, `expense-list/set-starred/${item._id}`, {});
+
+    let updatedXpnseList = xpnseList.map(list => {
       if (list._id === item._id) {
         list.isStarred = !list.isStarred;
       }
       return list;
+    });
+
+    updatedXpnseList.sort((a, b) => {
+      if (a.isStarred && !b.isStarred) return -1;
+      if (!a.isStarred && b.isStarred) return 1;
+      return 0;
+
     });
     setXpnseList(updatedXpnseList);
   }
@@ -77,6 +79,12 @@ function ExpenseList() {
 
   function handleXpnseNavigation(id, name) {
     naviagtion.navigate('Xpnse', { id, name });
+  }
+
+  function handleListAdd(state) {
+    if (state)
+      fetchXpnseList();
+
   }
 
   /// COMPONENT 
@@ -104,7 +112,7 @@ function ExpenseList() {
           <View style={ styles.MenuList }>
             <Pressable><Text style={ styles.MenuText }>Edit</Text></Pressable>
             <Pressable><Text style={ styles.MenuText }>More</Text></Pressable>
-            <Line customStyle={ { height: 1, widows: '90%', backgroundColor: '#1616173c' } } />
+            <Line customStyle={ { height: 1, width: '90%', backgroundColor: '#1616173c' } } />
             <Pressable><Text style={ [styles.MenuText, { color: Colors.danger }] }>Delete</Text></Pressable>
           </View>
         ) }
@@ -114,7 +122,7 @@ function ExpenseList() {
   // >> RETURN
   return (
     <SafeAreaView style={ styles.root }>
-      { renderAddList ? <AddList navigation={ naviagtion } renderComponent={ setRenderAddList } /> : '' }
+      { renderAddList ? <AddList navigation={ naviagtion } renderComponent={ setRenderAddList } handleListAdd={ handleListAdd } /> : '' }
       <ScreenTitle size={ 22 }>Expense List</ScreenTitle>
       { isLoading ? <Spinner color={ Colors.accent500 } msg="Fetching Expense List..." size={ 38 } /> : '' }
       <View style={ styles.body }>

@@ -31,9 +31,6 @@ const Xpnse = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
 
-    console.log('--------------------------');
-    console.log(dailyXpnse.length);
-
 
     /// INITIAL RENDER
     const fetchData = async () => {
@@ -43,7 +40,6 @@ const Xpnse = ({ navigation, route }) => {
             {},
         );
         if (response.status === 'success') {
-            console.log('data ', response.data);
             setDailyXpnse(response.data);
         }
     };
@@ -54,20 +50,18 @@ const Xpnse = ({ navigation, route }) => {
 
     /// Functions
     const handleAddExp = useCallback(() => {
-
-        console.log('askOptions ', askOptions);
         setAskOptions((prev) => !prev);
     }, []);
 
 
     function handleAddManual() {
-        navigation.navigate('AddDailyExp', { xpenseType: 'daily' });
+        navigation.navigate('AddDailyExp');
         setAskOptions((prev) => !prev);
     }
 
 
     function handleScan() {
-        navigation.navigate('QRScannerScreen');
+        navigation.navigate('QRScannerScreen', { type: 'daily' });
     }
 
 
@@ -91,7 +85,6 @@ const Xpnse = ({ navigation, route }) => {
     }
 
     const renderItem = ({ item }) => {
-        console.log('item ', item);
         return (
             <Pressable onPress={ () => previewXpnse(item) }>
                 <View style={ styles.item }>
@@ -166,6 +159,7 @@ export default Xpnse;
 const styles = StyleSheet.create({
     flex1: {
         flex: 1,
+        zIndex: -1,
     },
     item: {
         paddingVertical: 8,

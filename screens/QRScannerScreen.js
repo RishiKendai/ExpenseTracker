@@ -3,8 +3,11 @@ import { StyleSheet, Alert, Text, View, TouchableOpacity, Linking } from 'react-
 import { RNCamera } from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
+import RNUPISDK from 'react-native-upier';
+
 //! Main function 
-function QRScannerScreen({ navigation }) {
+function QRScannerScreen({ navigation, route }) {
+  const {type} = route.params
 
   // useEffect(() => {
   //   const handleDeepLink = (event) => {
@@ -29,13 +32,20 @@ function QRScannerScreen({ navigation }) {
 
 
   // const onSuccess = (e: any) => {
+  const successCallback = (data) => {
+    console.log('success');
+    console.log(data);
+  };
+
+  function failureCallback(data) {
+    console.log('failure');
+    console.log(data);
+  }
 
   const onSuccess = async (e) => {
-    console.log('adai ', e.data);
-    // Linking.openURL(e.data)
+    const upiId = encodeURIComponent(`${e.data}&cu=INR`);
     const rawData = e.data.split('?')[1];
     const abstractedData = rawData.split('&');
-    // const upiObject: MyObject = {}
     const upiObject = {};
     for (const item of abstractedData) {
       const [key, value] = item.split("=");
@@ -43,7 +53,19 @@ function QRScannerScreen({ navigation }) {
     }
     const pa = upiObject.pa;
     const pn = upiObject.pn;
-    console.log(upiObject.pa);
+    navigation.navigate('UPIPay', { type: type, data: e.data });
+
+    // RNUPISDK.initializePayment(
+    //   {
+    //     pa: pa, // or can be xxx@ybl or mobileNo@upi
+    //     pn: pn,
+    //     am: '1',
+    //     tf: 'acddsefid',
+    //     cu: 'INR',
+    //   },
+    //   successCallback,
+    //   failureCallback
+    // );
 
   };
 

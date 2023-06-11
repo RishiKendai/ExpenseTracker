@@ -68,7 +68,6 @@ function Login() {
     async function handleLogin() {
 
         const data = await post(loginData, 'user/auth/login', {});
-        console.log('data', data)
         if (data?.status) {
             authCtx.authenticate(data.token)
         } else {

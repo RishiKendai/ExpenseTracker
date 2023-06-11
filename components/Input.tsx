@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, StyleSheet } from 'react-native';
 import { CenterHorizontal } from "../utils/GlobalStyles";
 import Colors from "../utils/colors";
@@ -22,6 +22,11 @@ function Input({ label, onInput, data, inputType, action, keyType, captialize = 
     const [inputFocus, setInputFocus] = useState(false);
     const [inputValue, setInputValue] = useState('');
 
+    useEffect(() => {
+        if (data) {
+            handleInputFocus()
+        }
+    }, [])
     function handleInputFocus() {
         setInputFocus(true);
     }

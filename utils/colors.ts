@@ -11,5 +11,9 @@ const Colors = {
   success: '#2ECC71',
   danger: '#ff4c4c',
   warning: '#FFE207',
+  dogerBlue500: '#1541DC',
+  dogerBlue300: '#433FFD',
+  royalIndigo500: '#6A0FFF',
+
 };
 export default Colors;
