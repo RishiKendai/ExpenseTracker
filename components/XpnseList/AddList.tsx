@@ -37,7 +37,6 @@ type xpnseListActionProp = {
 type addListProps = {
   navigation: AddListScreenNavigationProp;
   renderComponent: Function;
-  handleListAdd: Function;
 }
 
 
@@ -64,7 +63,7 @@ function xpnseListReducer(state: xpnseListStateProp, action: xpnseListActionProp
 }
 
 //>> MAIN FUNCTION
-function AddList({ navigation, renderComponent, handleListAdd }: addListProps) {
+function AddList({ navigation, renderComponent }: addListProps) {
   const authCtx = useContext(AuthContext);
   /// USE STATES
   // const [xpnseList, setxpnseList] = useState<xpnseListProps>({ name: "", isStarred: false })
@@ -80,9 +79,9 @@ function AddList({ navigation, renderComponent, handleListAdd }: addListProps) {
     xpnseList.name = xpnseList.name.trim()
     setIsLoading(true);
     const response = await post(xpnseList, `expense-list/create/${authCtx.token}`, {});
+    console.log(response);
     if (response.status === 'success') {
       setIsLoading(false)
-      handleListAdd(true);
       renderComponent((prev: any) => !prev);
     }
   }

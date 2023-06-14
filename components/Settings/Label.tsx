@@ -45,6 +45,7 @@ const Label = ({ navigation, route }: LabelScreenProp) => {
     //                 'Authorization': `Bearer ${authCtx.token}`
     //             }
     //         });
+    //         console.log(response.labels)
     //         setLabels(response.labels);
     //     };
     //     getLabels();
@@ -56,6 +57,9 @@ const Label = ({ navigation, route }: LabelScreenProp) => {
                     'Authorization': `Bearer ${authCtx.token}`
                 }
             });
+            console.log('---------=-=-=-=----=')
+            console.log(response.labels.length)
+            // console.log(response.labels)
             setLabels(response.labels);
         };
         getLabels();
