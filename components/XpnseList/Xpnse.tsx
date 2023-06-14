@@ -14,7 +14,6 @@ import { post } from '../../utils/magicBox';
 import SpaceMaker from '../SpaceMaker';
 import Colors from '../../utils/colors';
 import { LabelProp } from '../Settings/Label';
-import Insights from './Insights';
 
 type XpnseProp = {
     navigation: XpnseScreenNavigationProp;
@@ -54,7 +53,7 @@ const Preview = ({ id, name, navigation }: PreviewProp) => {
 
 
     function handleScan() {
-        navigation.navigate('QRScannerScreen', { type: 'target' });
+        navigation.navigate('QRScannerScreen');
     }
 
     const fetchData = async () => {
@@ -63,7 +62,9 @@ const Preview = ({ id, name, navigation }: PreviewProp) => {
             `expense/get-all-list/${id}`,
             {},
         );
+        console.log(response)
         if (response.status === 'success') {
+            console.log('working ', response.data)
             setXpnse(response.data);
         }
     }
@@ -129,6 +130,12 @@ const Preview = ({ id, name, navigation }: PreviewProp) => {
 }
 /// --PREVIEW
 
+/// INSIGHTS
+const Insights = () => {
+    return <View><Text>no</Text></View>
+
+}
+/// --INSIGHTS
 
 
 //! MAIN FUNCTION   
@@ -145,11 +152,6 @@ const Xpnse = ({ navigation, route }: XpnseProp) => {
         return <Preview id={id} name={name} navigation={navigation} />
     }, []);
 
-    const InsightsComponent = useCallback(() => {
-        return <Insights xpnseListId={id} />
-    }, [])
-
-
     return (
         <SafeAreaView style={styles.Root}>
             <View style={styles.Root}>
@@ -159,7 +161,7 @@ const Xpnse = ({ navigation, route }: XpnseProp) => {
                         options={{ tabBarLabel: 'Expense', }}
                         name="Preview"
                         component={PreviewComponent} />
-                    <Tab.Screen options={{ tabBarLabel: 'Insights', }} name="Insights" component={InsightsComponent} />
+                    <Tab.Screen options={{ tabBarLabel: 'Insights', }} name="Insights" component={Insights} />
                 </Tab.Navigator>
             </View>
         </SafeAreaView>

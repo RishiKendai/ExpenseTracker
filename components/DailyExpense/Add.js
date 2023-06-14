@@ -46,6 +46,7 @@ function addXpenseReducer(state, action) {
 
 //! Main 
 function Add({ navigation, route }) {
+    const { xpenseType } = route.params;
     // const navigation = useNavigation();
     const authCtx = useContext(AuthContext);
 
@@ -91,6 +92,7 @@ function Add({ navigation, route }) {
             } else {
                 // Image selected successfully
                 addXpenseDispatch({ type: 'proof', payload: response.assets[0] });
+                console.log(response.assets[0]);
             }
         });
     };
@@ -131,10 +133,10 @@ function Add({ navigation, route }) {
     async function handleAdd() {
         if (isLoading) return;
         setIsLoading(true);
-        // if (xpenseType === 'daily')
+        if (xpenseType === 'daily')
             await post(addXpenseData, 'daily-expense/create', {});
-        // if (xpenseType === 'target')
-            // await post(addXpenseData, 'daily-expense/create', {});
+        if (xpenseType === 'target')
+            await post(addXpenseData, 'daily-expense/create', {});
 
         navigation.navigate('DailyExpense', { refresh: true });
 

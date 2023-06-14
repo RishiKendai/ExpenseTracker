@@ -25,7 +25,6 @@ import Label from './components/Settings/Label';
 import AddLabel from './components/Settings/AddLabel';
 import PreviewXpnse from './components/PreviewXpnse';
 import AddList from './components/XpnseList/AddList';
-import UPIPayScreen from './screens/UPIPay';
 import { LabelProp, ColorProp } from './components/Settings/Label';
 import Xpnse from './components/XpnseList/Xpnse';
 import AddXpnse from './components/XpnseList/AddXpnse';
@@ -62,8 +61,7 @@ export type RootStackParamList = {
   Login: {};
   BottomNavigation: {};
   AddDailyExp: {};
-  QRScannerScreen: {};
-  UPIPay: { type: string };
+  QRScannerScreen: undefined;
   DailyExpense: any;
   Expenses: undefined;
   CollaborativeExpense: undefined;
@@ -83,7 +81,6 @@ export type ExpensesNavigationProp = BottomTabNavigationProp<RootStackParamList,
 export type CollaborativeExpenseNavigationProp = BottomTabNavigationProp<RootStackParamList, 'CollaborativeExpense'>;
 export type SettingsNavigationProp = BottomTabNavigationProp<RootStackParamList, 'Settings'>;
 export type QRScannerNavigationProp = BottomTabNavigationProp<RootStackParamList, 'QRScannerScreen'>;
-export type UPIPayNavigationProp = BottomTabNavigationProp<RootStackParamList, 'UPIPay'>;
 
 
 /// Define the ROUTE prop type for each screen in the navigator
@@ -91,7 +88,7 @@ export type DailyExpenseRouteProp = RouteProp<RootStackParamList, 'DailyExpense'
 export type ExpensesRouteProp = RouteProp<RootStackParamList, 'Expenses'>;
 export type CollaborativeExpenseRouteProp = RouteProp<RootStackParamList, 'CollaborativeExpense'>;
 export type SettingsRouteProp = RouteProp<RootStackParamList, 'Settings'>;
-export type UPIPayRouteProp = RouteProp<RootStackParamList, 'UPIPay'>;
+export type QRScannerRouteProp = RouteProp<RootStackParamList, 'QRScannerScreen'>;
 
 
 // PreviewXpnse type
@@ -155,50 +152,50 @@ interface TabBarIconProps {
 //>> Bottom Navigation
 function BottomNavigation() {
   return (
-    <BottomTabs.Navigator screenOptions={{
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarStyle: { position: 'absolute', height: 60 },
-      tabBarBackground: TabBarBackground,
-      tabBarInactiveTintColor: '#8F8E8F',
-    }}>
-      <BottomTabs.Screen
-        name="DailyExpense"
-        component={DailyExpense}
-        options={{
-          title: 'Daily Expense',
-          tabBarLabel: 'Daily Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ArrowSwitchSvg} fill={color} />
-        }}
-      />
-      <BottomTabs.Screen
-        name="Expenses"
-        component={ExpenseList}
-        options={{
-          title: 'Expense',
-          tabBarLabel: 'Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={WalletSvg} fill={color} />
-        }}
-      />
-      <BottomTabs.Screen
-        name="CollaborativeExpense"
-        component={CollaborativeExpense}
-        options={{
-          title: 'Collaborative Expense',
-          tabBarLabel: 'Collaborative Expense',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={FileShareSvg} fill={color} />,
-        }}
-      />
-      <BottomTabs.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          title: 'Settings',
-          tabBarLabel: 'Settings',
-          tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ProfileSvg} fill={color} />
-        }}
-      />
-    </BottomTabs.Navigator>
+        <BottomTabs.Navigator screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: { position: 'absolute', height: 60 },
+          tabBarBackground: TabBarBackground,
+          tabBarInactiveTintColor: '#8F8E8F',
+        }}>
+          <BottomTabs.Screen
+            name="DailyExpense"
+            component={DailyExpense}
+            options={{
+              title: 'Daily Expense',
+              tabBarLabel: 'Daily Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ArrowSwitchSvg} fill={color} />
+            }}
+          />
+          <BottomTabs.Screen
+            name="Expenses"
+            component={ExpenseList}
+            options={{
+              title: 'Expense',
+              tabBarLabel: 'Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={WalletSvg} fill={color} />
+            }}
+          />
+          <BottomTabs.Screen
+            name="CollaborativeExpense"
+            component={CollaborativeExpense}
+            options={{
+              title: 'Collaborative Expense',
+              tabBarLabel: 'Collaborative Expense',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={FileShareSvg} fill={color} />,
+            }}
+          />
+          <BottomTabs.Screen
+            name="Settings"
+            component={Settings}
+            options={{
+              title: 'Settings',
+              tabBarLabel: 'Settings',
+              tabBarIcon: ({ color }: TabBarIconProps) => <SVGIcons SvgSrc={ProfileSvg} fill={color} />
+            }}
+          />
+        </BottomTabs.Navigator>
   );
 }
 
@@ -221,7 +218,6 @@ function AuthenticatedStack() {
       <Stack.Screen name="AddLabel" component={AddLabel} />
       <Stack.Screen name='PreviewXpnse' component={PreviewXpnse} />
       <Stack.Screen name="QRScannerScreen" component={QRScannerScreen} />
-      <Stack.Screen name="UPIPay" component={UPIPayScreen} />
       <Stack.Screen name="Xpnse" component={Xpnse} />
       <Stack.Screen name="AddXpnse" component={AddXpnse} />
     </Stack.Navigator>

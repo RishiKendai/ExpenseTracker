@@ -47,13 +47,13 @@ function addXpenseReducer(state, action) {
 function AddXpnse({ navigation, route }) {
     const { id, name } = route.params;
     const authCtx = useContext(AuthContext);
-    
+
     const [addXpenseData, addXpenseDispatch] = useReducer(addXpenseReducer, addXpenseState);
     const [labels, setLabels] = useState([]);
     useEffect(() => {
         addXpenseDispatch({ type: 'uid', payload: id });
     }, []);
-    
+
     useEffect(() => {
         const getLabels = async () => {
             const response = await post({}, 'label/get-all', {
@@ -80,7 +80,6 @@ function AddXpnse({ navigation, route }) {
                 skipBackup: true,
                 path: 'images',
             },
-            includeBase64: true,
         };
 
         launchImageLibrary(options, (response) => {
@@ -89,7 +88,9 @@ function AddXpnse({ navigation, route }) {
             } else if (response.errorCode) {
                 console.log('ImagePicker Error: ', response.errorMessage);
             } else {
-                addXpenseDispatch({ type: 'proof', payload: response.assets[0].base64 });
+                // Image selected successfully
+                addXpenseDispatch({ type: 'proof', payload: response.assets[0] });
+                console.log(response.assets[0]);
             }
         });
     };
@@ -103,7 +104,6 @@ function AddXpnse({ navigation, route }) {
                 skipBackup: true,
                 path: 'images',
             },
-            includeBase64: true,
         };
 
         launchCamera(options, (response) => {
@@ -113,7 +113,7 @@ function AddXpnse({ navigation, route }) {
                 console.log('ImagePicker Error: ', response.errorMessage);
             } else {
                 // Image captured successfully
-                addXpenseDispatch({ type: 'proof', payload: response.assets[0].base64 });
+                addXpenseDispatch({ type: 'proof', payload: response.assets[0] });
             }
         });
     };
@@ -128,12 +128,9 @@ function AddXpnse({ navigation, route }) {
     async function handleAdd() {
         if (isLoading) return;
         setIsLoading(true);
-        addXpenseData.proof = {
-            uri: addXpenseData.proof.uri,
-            name: addXpenseData.proof.fileName,
-            type: addXpenseData.proof.type,
-        }
-        const response = await post(addXpenseData, 'expense/create', {'Content-Type': 'multipart/form-data'});
+        console.log(addXpenseData);
+        const response = await post(addXpenseData, 'expense/create', {});
+        console.log('AddXpnse ', response.data);
         navigation.navigate('Xpnse', { id: id, name: name, refresh: true });
 
     }

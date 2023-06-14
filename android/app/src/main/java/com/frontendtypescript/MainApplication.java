@@ -9,9 +9,6 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
-import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
-import com.rvuyyuru.rnupier.UpierPackage;
-// import com.rnfs.RNFSPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -28,8 +25,6 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          // packages.add(new UpierPackage());
-          // packages.add(new RNHTMLtoPDFPackage());
           return packages;
         }
 

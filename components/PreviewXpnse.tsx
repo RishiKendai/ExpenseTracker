@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, Pressable, Image, ScrollView, FlatList, PermissionsAndroid, Platform } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Image, ScrollView, FlatList } from 'react-native'
 import React from 'react'
 
 /// Package
 import { useNavigation } from '@react-navigation/native'
 import BackIcon from '../assets/images/leftArrow.svg';
 import Icon from 'react-native-vector-icons/Feather';
-import EmptyImage from '../assets/images/empty_proof.svg'
+
 /// Components
 
 /// Types
@@ -14,8 +14,7 @@ import ScreenTitle from './ScreenTitle';
 import SpaceMaker from './SpaceMaker';
 import Colors from '../utils/colors';
 import { CenterHorizontal } from '../utils/GlobalStyles';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import RNFS from 'react-native-fs';
+
 type PreviewXpnseProps = {
     route: PreviewXpnseScreenRouteProp;
     navigation: PreviewXpnseScreenNavigationProp;
@@ -49,86 +48,6 @@ const PreviewXpnse: React.FC<PreviewXpnseProps> = ({ navigation, route }) => {
     function handleEdit() {
 
     }
-
-    async function downloadTransaction() {
-        const directoryPath = Platform.OS === 'android' ? '/storage/emulated/0/Download/' : 'Download';
-        const pdf = `
-    <style>
-    .text {
-        font-size: 1em;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        text-align: left;
-    }
-
-    table {
-        border-spacing: 15px;
-    }
-
-    .img {
-        object-fit: cover;
-        height: 180px;
-        width: 180px;
-        border-radius: 6px;
-
-    }
-</style>
-<table>
-<tr class="tr">
-    <th class="text">Transaction ID</th>
-    <td class="text">${item._id}</td>
-</tr>
-<tr>
-    <th class="text">paid to</th>
-    <td class="text">${item.payeeName}</td>
-</tr>
-<tr>
-    <th class="text">Transaction date</th>
-    <td class="text">${new Date(item.paidAt).toLocaleString()}</td>
-</tr>
-<tr>
-    <th class="text">Spend to</th>
-    <td class="text">${item.label.name}</td>
-</tr>
-<tr>
-    <th class="text">Amount</th>
-    <td class="text">${item.amount}</td>
-</tr>
-<tr>
-    <th class="text">Notes</th>
-    <td class="text">${item.note}</td>
-</tr>
-<tr>
-    <td colspan="2">
-        <img class="img" src="${item.proof.uri}" />
-    </td>
-</tr>
-</table>
-`
-        let options = {
-            html: pdf,
-            fileName: `transaction-${item._id}`,
-            directory: 'Download',
-            width: 595,
-            height: 842,
-            base64: true,
-        };
-        let file = await RNHTMLtoPDF.convert(options)
-        const filePath = RNFS.DownloadDirectoryPath + '/tests.pdf'
-        console.log('-----------------------------------------')
-        // console.log(RNFetchBlob.fs.dirs.DownloadDir)
-        console.log('-----------------------------------------')
-        if (file.base64 === undefined) file.base64 = ''
-        RNFS.writeFile(filePath, file.base64, 'base64').then((success) => {
-            console.log('FILE WRITTEN!');
-        })
-            .catch((err) => {
-                console.log(err.message);
-            });
-        console.log('RNHTMLtoPDF ', RNHTMLtoPDF)
-        console.log('-----------------------------------------')
-        alert(file.filePath);
-
-    }
     return (
         <View style={styles.Root}>
             <ScreenTitle renderBackIcon={true} backAction={handleNavigation} center={true} color='#eee' backIcon={<BackIcon />} size={22}>Transaction Details</ScreenTitle>
@@ -139,7 +58,7 @@ const PreviewXpnse: React.FC<PreviewXpnseProps> = ({ navigation, route }) => {
                     {/* <Text style={{ color: '#fff' }}>Edit</Text> */}
                 </Pressable>
                 {/* DOWNLOAD */}
-                <Pressable onPress={downloadTransaction} style={[styles.Btn, styles.DownloadBtn]}>
+                <Pressable style={[styles.Btn, styles.DownloadBtn]}>
                     <Icon name='download' size={22} color="#dcdcdf" />
                     {/* <Text style={styles.DownloadText}>Download</Text> */}
                 </Pressable>
@@ -190,10 +109,7 @@ const PreviewXpnse: React.FC<PreviewXpnseProps> = ({ navigation, route }) => {
             </View>
             {/* PROOF */}
             <View style={{ ...CenterHorizontal, marginBottom: 10 }}><Text style={styles.ProofText}>Proof</Text></View>
-            {item.proof === null
-                ? <EmptyImage style={styles.Proof} />
-                : <Image source={item.proof} style={styles.Proof} />
-            }
+            <Image source={item.proof} style={styles.Proof} />
         </View>
     );
 }
